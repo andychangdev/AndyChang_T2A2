@@ -2,7 +2,7 @@
 
 | No. | Requirements |
 | --- | ------------ |
-| R1 | <a href="#r1---indentification-of-the-problem">Indentification of the Problem</a> |
+| R1 | <a href="#r1---identification-of-the-problem">Identification of the Problem</a> |
 | R2 | <a href="#r2---significance-of-the-problem">Significance of the Problem</a> |
 | R3 | <a href="#r3---choice-of-database-system">Choice of Database System</a> |
 | R4 | <a href="#r4---key-functionalities-and-benefits-of-orm">Key Functionalities and Benefits of ORM</a> |
@@ -15,19 +15,21 @@
 
 
 
-## R1 - Indentification of the Problem
+## R1 - Identification of the Problem
 
-CMP1042-2.2 Identify the problem you’re trying to solve by building this particular App. Why is it a problem that needs solving?
+Traveling is a deeply personal and enriching experience, however planning a trip can be complex, overwhelming and time-consuming, and often involves uncertainties and overwhelming amounts of information.
 
-Identifies the problem being solved by this application, with convincing argument as to why it needs solving
-
+This API seeks to simplify the way people plan trips by offering a solution where users can easily share their travel itineraries and seek feedback from a community of fellow travelers. Users can also easily explore travel itineraries that match their intended destinations, thereby saving time and effort. These travel itineraries serve as a starting point for travelers who want to explore new places without spending countless hours searching online. It aims to provide a centralised hub for comprehensive, personalised, and authentic travel information.
 
 ## R2 - Significance of the Problem
 
-CMP1042-2.2 Identify the problem you’re trying to solve by building this particular App. Why is it a problem that needs solving?
+Planning a trip is not just about choosing a destination but also involves extensive research, creating an itinerary, and making numerous decisions. This process can take a significant amount of time and effort, leaving many new travellers overwhelmed and exhausted. 
 
-Identifies the problem being solved by this application, with convincing argument as to why it needs solving
+Unfortunately, this exhausting process is exacerbated by the amount of travel resources available online in this day and age. Some websites provide good information, while some provide paid advertisements disguised as articles. For instance, some tour operators pay bloggers large amounts of money to write positive reviews of their tours. As a result, consumers may end up booking tours that fail to meet their expectations. 
 
+To counteract these sort of biased and misleading reviews, it is important that the travel communnity play a role in maintaining the integrity of travel information. Hence, this API seeks to enable it by allowing real travelers to share their past itineraies and provide honest and authentic reviews and ratings. New travelers can benefit greatly from this shared knowledge, as this allows them to fact-check and not just rely only on travel guides written by professional writers whose opinions may or may not be influenced by advertising dollars.
+
+Another common problem travelers face when planning for trips to unfamiliar places is dealing with anxiety and uncertainty. Getting confirmation from seasoned travellers, or perhaps even locals, can significantly ease their worries and make the journey less stressful. That is why this API enables users to share their itinaries and recieve feedback from other travellers. This sort of interaction can help build confidence and reduce anxiety.
 
 ## R3 - Choice of Database System
 
@@ -93,10 +95,18 @@ Eg. Normalisation, Relations, One-to-Many, Many-to-Many Relationships
 In this project, I have opted to use a Kanban workflow as my method of planning and tracking the development of my application. Each column represents a different phase of development. Cards flow from one column to the next as they progress towards completion. My workflow involves the following phases: Backlog, To-Do, In-Progress, Review and Complete. 
 
 
-**10-03-2024:** On this day, I began formulating my software development plan on Trello. I started by laying out the documentation requirements and creating due dates for my top priority tasks.
+**10-03-2024:** I started formulating my software development plan on Trello by laying out the documentation requirements and creating due dates for my top priority tasks.
 
-![screenshot](./docs/10-03-2024.jpeg)
+![screenshot](./docs/kanban_board/10-03-2024.jpeg)
+![screenshot](./docs/checklists/10-03-2024_c1.png)
+![screenshot](./docs/checklists/10-03-2024_c2.png)
+![screenshot](./docs/checklists/10-03-2024_c3.png)
 
-**11-03-2024:** On this day, I cooked up an API idea and created the Entity-Relationship Diagram for it. Then, I posted the idea along with the ERD onto the Coder Academy discord channel for an educator to review.
+**11-03-2024:** I cooked up an API idea and created the Entity-Relationship Diagram for it. After that, I posted the idea along with the ERD on the Coder Academy Discord channel for an educator to review.
 
-![screenshot](./docs/11-03-2024.jpeg)
+![screenshot](./docs/kanban_board/11-03-2024.jpeg)
+
+**12-03-2024:** My API idea was approved by an educator, so I updated the Kanban board and added new cards. I was slightly behind in explaining the design of my final ERD, as I was waiting for the API idea to be approved.
+
+![screenshot](./docs/kanban_board/12-03-2024.jpeg)
+![screenshot](./docs/checklists/12-03-2024.png)
