@@ -23,9 +23,9 @@ This API seeks to simplify the way people plan trips by offering a solution wher
 
 ## R2 - Significance of the Problem
 
-Planning a trip is not just about choosing a destination but also involves extensive research, creating an itinerary, and making numerous decisions. This process can take a significant amount of time and effort, leaving many new travellers overwhelmed and exhausted. 
+Planning a trip is not just about choosing a destination but also involves extensive research, creating an itinerary, and making numerous decisions. This process can take a significant amount of time and effort, which can leave many new travellers overwhelmed and exhausted. 
 
-Unfortunately, this exhausting process is exacerbated by the amount of travel resources available online in this day and age. Some websites provide good information, while some provide paid advertisements disguised as articles. For instance, some tour operators pay bloggers large amounts of money to write positive reviews of their tours. As a result, consumers may end up booking tours that fail to meet their expectations. 
+Unfortunately, this exhausting process is exacerbated by the amount of travel resources available online in this day and age. Some websites provide good information, while some provide paid advertisements disguised as articles. For instance, some tour operators pay bloggers large amounts of money to write positive reviews of their tours. As a result, travellers may end up booking tours that fail to meet their expectations. 
 
 To counteract these sort of biased and misleading reviews, it is important that the travel communnity play a role in maintaining the integrity of travel information. Hence, this API seeks to enable it by allowing real travelers to share their past itineraies and provide honest and authentic reviews and ratings. New travelers can benefit greatly from this shared knowledge, as this allows them to fact-check and not just rely only on travel guides written by professional writers whose opinions may or may not be influenced by advertising dollars.
 
@@ -89,6 +89,15 @@ Provides coherent discussion of the database relations, with reference to the ER
 
 Eg. Normalisation, Relations, One-to-Many, Many-to-Many Relationships
 
+Entities in a database can be related to one another, forming relationships known as "relations". The number of instances of an entity inolved in a relationship with another entity is known as 'cardinality'. By understanding the relations and cardinality between entities in a database schema, developers can gain valuable insight into how entities are related to each other and how the database should be structured to ensure efficient data storage and retrieval.
+
+Here are the relations and cardinality between each entity in this API:
+
+- The user entity shares a One-to-Many relationship with both the itinerary entity and the review entity, where a user can create zero or more itineraries/reviews, and each itinerary/review can belong to only one user.
+
+- The itinerary entity and review entity share a One-to-Many relationship, where a itinerary can contain zero or more reviews, and each review can belong in only one itinerary.
+
+- The itinerary entity and destination entity share a Many-to-Many relationship, where a itinerary can have one or many destinations, and each destination can belong in many itineraries. 
 
 ## R10 - Project Development Log
 
@@ -110,3 +119,7 @@ In this project, I have opted to use a Kanban workflow as my method of planning 
 
 ![screenshot](./docs/kanban_board/12-03-2024.jpeg)
 ![screenshot](./docs/checklists/12-03-2024.png)
+
+**13-03-2024:** Completed basic app initialisation and configuration.
+
+![screenshot](./docs/kanban_board/13-03-2024.jpeg)
