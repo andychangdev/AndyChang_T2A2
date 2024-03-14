@@ -1,5 +1,5 @@
 from init import db, ma
-
+from marshmallow import fields
 
 # create database that represents the user entity
 class User(db.Model):
@@ -12,11 +12,14 @@ class User(db.Model):
     date_joined = db.Column(db.Date, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
+    itineraries = db.relationship("Itinerary", back_populates="user", cascade='all, delete')
 
 # creates a schema for user object
 class UserSchema(ma.Schema):
+    itineraries = fields.List(fields.Nested('ItinerarySchema', exclude=['user']))
+
     class Meta:
-        fields = ("user_id", "username", "email", "password", "date_joined", "is_admin")
+        fields = ("user_id", "username", "email", "password", "date_joined", "is_admin", "itineraries")
 
 
 user_schema = UserSchema(exclude=["password"])
