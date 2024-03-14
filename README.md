@@ -123,3 +123,10 @@ In this project, I have opted to use a Kanban workflow as my method of planning 
 **13-03-2024:** Completed basic app initialisation and configuration.
 
 ![screenshot](./docs/kanban_board/13-03-2024.jpeg)
+
+**14-03-2024:** Added user stories for API modules and made progress on user authentication.
+
+![screenshot](./docs/kanban_board/14-03-2024.jpeg)
+![screenshot](./docs/checklists/14-03-2024_c1.png)
+![screenshot](./docs/checklists/14-03-2024_c2.png)
+![screenshot](./docs/checklists/14-03-2024_c3.png)
