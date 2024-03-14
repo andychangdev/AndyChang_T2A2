@@ -3,6 +3,7 @@ from datetime import date
 from flask import Blueprint
 from init import db, bcrypt
 from models.user import User
+from models.itinerary import Itinerary
 
 db_commands = Blueprint("db", __name__)
 
@@ -38,5 +39,43 @@ def seed_tables():
     ]
 
     db.session.add_all(users)
+
+    itineraries = [
+        Itinerary(
+            title="Trip 1",
+            content="Trip 1 content",
+            date=date.today(),
+            duration="7 days",
+            type="Guide",
+            user=users[0]
+        ),
+        Itinerary(
+            title="Trip 2",
+            content="Trip 2 content",
+            date=date.today(),
+            duration="6 days",
+            type="Guide",
+            user=users[0]
+        ),
+        Itinerary(
+            title="Trip 3",
+            content="Trip 3 content",
+            date=date.today(),
+            duration="4 days",
+            type="Advice",
+            user=users[1]
+        ),
+        Itinerary(
+            title="Trip 4",
+            content="Trip 4 content",
+            date=date.today(),
+            duration="2 days",
+            type="Advice",
+            user=users[1]
+        ),
+    ]
+
+    db.session.add_all(itineraries)
+    
     db.session.commit()
     print("Tables seeded successfully.")
