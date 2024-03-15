@@ -4,6 +4,7 @@ from flask import Blueprint
 from init import db, bcrypt
 from models.user import User
 from models.itinerary import Itinerary
+from models.country import Country
 
 db_commands = Blueprint("db", __name__)
 
@@ -19,7 +20,7 @@ def drop_tables():
     db.drop_all()
     print("Tables deleted successfully.")
 
-# Seed the tables in the database
+# Seed the tables into the database
 @db_commands.cli.command("seed")
 def seed_tables():
     users = [
@@ -40,37 +41,62 @@ def seed_tables():
 
     db.session.add_all(users)
 
+
+    countries = [
+        Country(
+            name="Australia"
+        ),
+        Country(
+            name="France"
+        ),
+        Country(
+            name="Singapore"
+        ),
+        Country(
+            name="China"
+        ),
+        Country(
+            name="United States of America"
+        ),
+    ]
+
+    db.session.add_all(countries)
+
     itineraries = [
         Itinerary(
             title="Trip 1",
-            content="Trip 1 content",
-            date=date.today(),
-            duration="7 days",
-            type="Guide",
+            content="The quick brown fox jumps over the lazy dog",
+            date_posted=date.today(),
+            duration="3 days",
+            post_type="Guide",
+            country=countries[0],
             user=users[0]
         ),
         Itinerary(
             title="Trip 2",
-            content="Trip 2 content",
-            date=date.today(),
+            content="Grumpy wizards make toxic brew for the evil Queen and Jack",
+            date_posted=date.today(),
             duration="6 days",
-            type="Guide",
-            user=users[0]
+            post_type="Guide",
+            country=countries[0],
+            user=users[1]
         ),
         Itinerary(
             title="Trip 3",
-            content="Trip 3 content",
-            date=date.today(),
-            duration="4 days",
-            type="Advice",
+            content="The quick jogger zips past lazy walkers",
+            date_posted=date.today(),
+            duration="1 week",
+            post_type="Advice",
+            country=countries[1],
             user=users[1]
         ),
         Itinerary(
             title="Trip 4",
-            content="Trip 4 content",
-            date=date.today(),
-            duration="2 days",
-            type="Advice",
+            content="Five dozen quirky elves quickly jump between hedges",
+            date_posted=date.today(),
+            duration="2 weeks",
+            post_type="Advice",
+            country=countries[2],
             user=users[1]
         ),
     ]
