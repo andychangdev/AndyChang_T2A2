@@ -19,7 +19,7 @@ class UserSchema(ma.Schema):
     itineraries = fields.List(fields.Nested('ItinerarySchema', exclude=['user']))
 
     class Meta:
-        fields = ("user_id", "username", "email", "password", "date_joined", "is_admin", "itineraries")
+        fields = ("id", "username", "email", "password", "date_joined", "is_admin", "itineraries")
 
 
 user_schema = UserSchema(exclude=["password"])
