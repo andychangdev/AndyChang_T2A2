@@ -12,11 +12,10 @@ class Country(db.Model):
 
 # creates a schema for user object
 class CountrySchema(ma.Schema):
-    itineraries = fields.List(fields.Nested('ItinerarySchema', exclude=['country']))
+    itineraries = fields.List(fields.Nested('ItinerarySchema', only=['id']))
 
     class Meta:
-        fields = ("id", "name")
+        fields = ("id", "name", "itineraries")     
 
-
-user_schema = CountrySchema()
-users_schema = CountrySchema(many=True)
+country_schema = CountrySchema()
+countries_schema = CountrySchema(many=True)
