@@ -1,10 +1,12 @@
 from init import db, ma
 from marshmallow import fields
 
-# create database that represents the user entity
-class User(db.Model):
-    __tablename__ = "users"
 
+# create database model for users
+class User(db.Model):
+
+    # define name and columns of the table
+    __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
@@ -12,15 +14,19 @@ class User(db.Model):
     date_joined = db.Column(db.Date, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
-    itineraries = db.relationship("Itinerary", back_populates="user", cascade='all, delete')
-    reviews = db.relationship("Review", back_populates="user", cascade='all, delete')
+    # establish relationship with other table
+    itineraries = db.relationship("Itinerary", back_populates="user", cascade="all, delete")
+    reviews = db.relationship("Review", back_populates="user", cascade="all, delete")
 
 
-# creates a schema for user object
+# create a schema for user object
 class UserSchema(ma.Schema):
-    itineraries = fields.List(fields.Nested('ItinerarySchema', exclude=['user']))
-    reviews = fields.List(fields.Nested('ReviewSchema', exclude=['user']))
 
+    # use existing schema for the following fields
+    itineraries = fields.List(fields.Nested("ItinerarySchema", exclude=["user"]))
+    reviews = fields.List(fields.Nested("ReviewSchema", exclude=["user"]))
+
+    # define fields to be serialized
     class Meta:
         fields = ("id", "username", "email", "password", "date_joined", "is_admin", "itineraries", "reviews")
 

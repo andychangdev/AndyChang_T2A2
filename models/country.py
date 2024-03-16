@@ -1,19 +1,25 @@
 from init import db, ma
 from marshmallow import fields
 
-# create database that represents the user entity
-class Country(db.Model):
-    __tablename__ = "countries"
 
+# create database model for countries
+class Country(db.Model):
+
+    # define name and columns of the table
+    __tablename__ = "countries"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, unique=True)
 
+    # establish relationship with other table
     itineraries = db.relationship("Itinerary", back_populates="country")
 
-# creates a schema for user object
+# create schema for country objects
 class CountrySchema(ma.Schema):
-    itineraries = fields.List(fields.Nested('ItinerarySchema', only=['id']))
 
+    # use existing schema for the following fields
+    itineraries = fields.List(fields.Nested("ItinerarySchema", only=["id"]))
+
+    # define fields to be serialized
     class Meta:
         fields = ("id", "name", "itineraries")     
 
