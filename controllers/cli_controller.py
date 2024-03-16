@@ -5,7 +5,7 @@ from init import db, bcrypt
 
 from models.user import User
 from models.itinerary import Itinerary
-from models.country import Country
+from models.destination import Destination
 from models.review import Review
 
 
@@ -50,25 +50,30 @@ def seed_tables():
     db.session.add_all(users)
 
 
-    # seed data for countries
-    countries = [
-        Country(
-            name="Australia"
+    # seed data for destination
+    destinations = [
+        Destination(
+            name="Australia",
+            type="Country"
         ),
-        Country(
-            name="France"
+        Destination(
+            name="France",
+            type="Country"
         ),
-        Country(
-            name="Singapore"
+        Destination(
+            name="Singapore",
+            type="Country"
         ),
-        Country(
-            name="China"
+        Destination(
+            name="Brisbane",
+            type="City"
         ),
-        Country(
-            name="United States of America"
+        Destination(
+            name="Melbourne",
+            type="City"
         ),
     ]
-    db.session.add_all(countries)
+    db.session.add_all(destinations)
 
 
     # seed data for itineraries
@@ -79,7 +84,7 @@ def seed_tables():
             date_posted=date.today(),
             duration="3 days",
             post_type="Guide",
-            country=countries[0],
+            destination=destinations[0],
             user=users[0]
         ),
         Itinerary(
@@ -88,7 +93,7 @@ def seed_tables():
             date_posted=date.today(),
             duration="6 days",
             post_type="Guide",
-            country=countries[0],
+            destination=destinations[0],
             user=users[1]
         ),
         Itinerary(
@@ -97,7 +102,7 @@ def seed_tables():
             date_posted=date.today(),
             duration="1 week",
             post_type="Advice",
-            country=countries[1],
+            destination=destinations[1],
             user=users[1]
         ),
         Itinerary(
@@ -106,7 +111,7 @@ def seed_tables():
             date_posted=date.today(),
             duration="2 weeks",
             post_type="Advice",
-            country=countries[2],
+            destination=destinations[2],
             user=users[1]
         ),
     ]

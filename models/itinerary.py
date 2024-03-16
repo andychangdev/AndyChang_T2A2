@@ -13,11 +13,11 @@ class Itinerary(db.Model):
     date_posted = db.Column(db.Date)
     duration = db.Column(db.String(10))
     post_type = db.Column(db.String(10))
-    country_id = db.Column(db.Integer, db.ForeignKey("countries.id"), nullable=False)
+    destination_id = db.Column(db.Integer, db.ForeignKey("destinations.id"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     
     # establish relationship with other tables
-    country = db.relationship("Country", back_populates="itineraries")
+    destination = db.relationship("Destination", back_populates="itineraries")
     user = db.relationship("User", back_populates="itineraries")
     reviews = db.relationship("Review", back_populates="itinerary")
 
@@ -27,13 +27,13 @@ class ItinerarySchema(ma.Schema):
     
     # use existing schemas for the following fields
     user = fields.Nested("UserSchema", only=["username"])
-    country = fields.Nested("CountrySchema", only=["name"])
+    destination = fields.Nested("DestinationSchema", only=["name", "type"])
     reviews = fields.List(fields.Nested("ReviewSchema", exclude=["itinerary"]))
 
     # define fields to be serialized
     class Meta:
-        fields = ("id", "title", "content", "date_posted", "duration", "post_type", "country", "user", "reviews")
+        fields = ("id", "title", "content", "date_posted", "duration", "post_type", "destination", "user", "reviews")
         ordered = True # maintain order of the fields
 
 itinerary_schema = ItinerarySchema()
-itineraries_schema = ItinerarySchema(many=True)
+itineraries_schema = ItinerarySchema(many=True, exclude=["reviews"])

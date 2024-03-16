@@ -5,7 +5,7 @@ from init import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models.itinerary import Itinerary, itineraries_schema, itinerary_schema
-from models.country import Country
+from models.destination import Destination
 
 
 itineraries_bp = Blueprint("itineraries", __name__, url_prefix="/itineraries")
@@ -39,11 +39,11 @@ def create_itinerary():
     # retrieve data from the request body
     data = request.get_json()
 
-    # query country table to get the country_id that matches the provided country_name
-    country_name = data.get("country")
-    selected_country = Country.query.filter_by(name=country_name).first()
-    if not selected_country:
-        return {"Error": "Country not found"}, 400
+    # query destination table to get the destination_id that matches the provided destination_name
+    destination_name = data.get("destination")
+    selected_destination = Destination.query.filter_by(name=destination_name).first()
+    if not selected_destination:
+        return {"Error": "Destination not found"}, 400
 
     # create itinerary instance
     itinerary = Itinerary(
@@ -52,7 +52,7 @@ def create_itinerary():
         date_posted=date.today(),
         duration=data.get("duration"),
         post_type=data.get("post_type"),
-        country=selected_country,
+        destination=selected_destination,
         user_id=get_jwt_identity(),
     )
     # add and commit new itinerary to database
@@ -63,19 +63,19 @@ def create_itinerary():
     return itinerary_schema.dump(itinerary), 201
 
 
-# retrieve itineraries by country
-@itineraries_bp.route("/<string:country_name>")
-def get_itineraries_by_country(country_name):
-    # query country table to get the country_id that matches the provided country_name
-    country = db.session.query(Country).filter_by(name=country_name).first()
-    # if the country exists, use retrieved country_id to filter itineraries
-    if country:
-        selected_country_id = country.id
-        stmt = db.select(Itinerary).filter_by(country_id=selected_country_id)
+# retrieve itineraries by destination
+@itineraries_bp.route("/<string:destination_name>")
+def get_itineraries_by_destination(destination_name):
+    # query destination table to get the destination_id that matches the provided destination_name
+    destination = db.session.query(Destination).filter_by(name=destination_name).first()
+    # if the destination exists, use retrieved destination_id to filter itineraries
+    if destination:
+        selected_destination_id = destination.id
+        stmt = db.select(Itinerary).filter_by(destination_id=selected_destination_id)
         itineraries = db.session.scalars(stmt)
         return itineraries_schema.dump(itineraries)
     else:
-        return {"Error": "Country not found"}, 404
+        return {"Error": "Destination not found"}, 404
     
 
 # update an existing itinerary
@@ -83,11 +83,11 @@ def get_itineraries_by_country(country_name):
 def update_itinerary(itinerary_id):
     # retrieve data from the request body
     data = request.get_json()
-    # query country table to get the country_id that matches the provided country_name
-    country_name = data.get("country")
-    selected_country = Country.query.filter_by(name=country_name).first()
-    if not selected_country:
-        return {"Error": "Country not found"}, 400
+    # query destination table to get the destination_id that matches the provided destination_name
+    destination_name = data.get("destination")
+    selected_destination = Destination.query.filter_by(name=destination_name).first()
+    if not selected_destination:
+        return {"Error": "Destination not found"}, 400
     
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
@@ -97,7 +97,7 @@ def update_itinerary(itinerary_id):
         itinerary.content = data.get('content') or itinerary.content
         itinerary.duration = data.get('duration') or itinerary.duration
         itinerary.post_type = data.get('post_type') or itinerary.post_type
-        itinerary.country = selected_country or itinerary.country
+        itinerary.destination = selected_destination or itinerary.destination
 
         db.session.commit()
         return itinerary_schema.dump(itinerary)
