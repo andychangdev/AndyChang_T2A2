@@ -111,7 +111,7 @@ def seed_tables():
             date_posted=date.today(),
             duration="2 weeks",
             post_type="Advice",
-            destination=destinations[2],
+            destination=destinations[3],
             user=users[1]
         ),
     ]

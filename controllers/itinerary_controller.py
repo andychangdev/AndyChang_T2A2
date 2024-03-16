@@ -63,9 +63,9 @@ def create_itinerary():
     return itinerary_schema.dump(itinerary), 201
 
 
-# retrieve itineraries by destination
+# retrieve itineraries by destination_name
 @itineraries_bp.route("/<string:destination_name>")
-def get_itineraries_by_destination(destination_name):
+def get_itineraries_by_destination_name(destination_name):
     # query destination table to get the destination_id that matches the provided destination_name
     destination = db.session.query(Destination).filter_by(name=destination_name).first()
     # if the destination exists, use retrieved destination_id to filter itineraries
@@ -76,6 +76,20 @@ def get_itineraries_by_destination(destination_name):
         return itineraries_schema.dump(itineraries)
     else:
         return {"Error": "Destination not found"}, 404
+    
+# retrieve itineraries by destination_tyoe
+@itineraries_bp.route("/type/<string:destination_type>")
+def get_itineraries_by_destination_type(destination_type):
+    # query destination table to get the destination_id that matches the provided destination_name
+    destination = db.session.query(Destination).filter_by(type=destination_type).first()
+    # if the destination exists, use retrieved destination_id to filter itineraries
+    if destination:
+        selected_destination_id = destination.id
+        stmt = db.select(Itinerary).filter_by(destination_id=selected_destination_id)
+        itineraries = db.session.scalars(stmt)
+        return itineraries_schema.dump(itineraries)
+    else:
+        return {"Error": "Destination type not found"}, 404
     
 
 # update an existing itinerary
