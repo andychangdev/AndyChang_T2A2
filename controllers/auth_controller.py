@@ -2,38 +2,41 @@ from datetime import date, timedelta
 
 from flask import Blueprint, request
 from init import db, bcrypt
-from models.user import User, user_schema
 from psycopg2 import errorcodes
-
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token
 
+from models.user import User, user_schema
+
+
+# create a blueprint
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
+# register a user
 @auth_bp.route("/register", methods=["POST"])
 def auth_register():
     try:
         # retrieve data from the request body
         data = request.get_json()
-        # create the user instance
+
+        # create user instance
         user = User(
             username=data.get("username"),
             email=data.get("email"),
             date_joined=date.today()
         )
+
         # retrieve password from request body
         password = data.get("password")
-        # if the password exists, then hash the password
+        # if password exists, then hash the password
         if password:
             user.password = bcrypt.generate_password_hash(password).decode("utf-8")
-
         # add and commit the user to database
         db.session.add(user)
         db.session.commit()
-        # respond back to the client
         return user_schema.dump(user), 201
-
+    
     except IntegrityError as error:
         # if error is due to empty data field, return error message
         if error.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
@@ -47,16 +50,17 @@ def auth_register():
                 return {"Error": f"Email address already registered."}, 409
 
 
+# login an existing user
 @auth_bp.route("/login", methods=["POST"])
 def auth_login():
-    # retrieve the request body
+    # retrieve data from the request body
     data = request.get_json()
+    
     # retrieve the user with email address
     stmt = db.select(User).filter_by(email=data.get("email"))
     user = db.session.scalar(stmt)
-    # if user exists
+    # if user exists and password is correct, create jwt token and return user info along with token
     if user:
-         # if password is correct, create jwt token and return user info along with token
         if bcrypt.check_password_hash(user.password, data.get("password")):
             token = create_access_token(
                 identity=str(user.id), expires_delta=timedelta(days=1)

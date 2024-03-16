@@ -2,27 +2,35 @@ from datetime import date
 
 from flask import Blueprint
 from init import db, bcrypt
+
 from models.user import User
 from models.itinerary import Itinerary
 from models.country import Country
 
+
+# create a blueprint
 db_commands = Blueprint("db", __name__)
 
-# Create the tables in the database
+
+# Create tables in the database
 @db_commands.cli.command("create")
 def create_tables():
     db.create_all()
     print("Tables created successfully.")
 
-# Drops all tables from the database
+
+# Drop tables from the database
 @db_commands.cli.command("drop")
 def drop_tables():
     db.drop_all()
     print("Tables deleted successfully.")
 
+
 # Seed the tables into the database
 @db_commands.cli.command("seed")
 def seed_tables():
+
+    # seeding data for users
     users = [
         User(
             username="Admin",
@@ -38,30 +46,9 @@ def seed_tables():
             date_joined=date.today(),
         )
     ]
-
     db.session.add_all(users)
 
-
-    countries = [
-        Country(
-            name="Australia"
-        ),
-        Country(
-            name="France"
-        ),
-        Country(
-            name="Singapore"
-        ),
-        Country(
-            name="China"
-        ),
-        Country(
-            name="United States of America"
-        ),
-    ]
-
-    db.session.add_all(countries)
-
+    # seeding data for itineraries
     itineraries = [
         Itinerary(
             title="Trip 1",
@@ -100,8 +87,28 @@ def seed_tables():
             user=users[1]
         ),
     ]
-
     db.session.add_all(itineraries)
-    
+
+    # seeding data for countries
+    countries = [
+        Country(
+            name="Australia"
+        ),
+        Country(
+            name="France"
+        ),
+        Country(
+            name="Singapore"
+        ),
+        Country(
+            name="China"
+        ),
+        Country(
+            name="United States of America"
+        ),
+    ]
+    db.session.add_all(countries)
+
+    # commit tables into database
     db.session.commit()
     print("Tables seeded successfully.")
