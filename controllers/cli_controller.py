@@ -6,6 +6,7 @@ from init import db, bcrypt
 from models.user import User
 from models.itinerary import Itinerary
 from models.country import Country
+from models.review import Review
 
 
 # create a blueprint
@@ -30,7 +31,7 @@ def drop_tables():
 @db_commands.cli.command("seed")
 def seed_tables():
 
-    # seeding data for users
+    # seed data for users
     users = [
         User(
             username="Admin",
@@ -48,7 +49,29 @@ def seed_tables():
     ]
     db.session.add_all(users)
 
-    # seeding data for itineraries
+
+    # seed data for countries
+    countries = [
+        Country(
+            name="Australia"
+        ),
+        Country(
+            name="France"
+        ),
+        Country(
+            name="Singapore"
+        ),
+        Country(
+            name="China"
+        ),
+        Country(
+            name="United States of America"
+        ),
+    ]
+    db.session.add_all(countries)
+
+
+    # seed data for itineraries
     itineraries = [
         Itinerary(
             title="Trip 1",
@@ -89,25 +112,40 @@ def seed_tables():
     ]
     db.session.add_all(itineraries)
 
-    # seeding data for countries
-    countries = [
-        Country(
-            name="Australia"
+
+    # seed data for reviews
+    reviews = [
+        Review(
+            rating="5",
+            comment="The quick brown fox jumps over the lazy dog",
+            date_posted=date.today(),
+            user=users[0],
+            itinerary=itineraries[0]
         ),
-        Country(
-            name="France"
+        Review(
+            rating="4",
+            comment="Grumpy wizards make toxic brew for the evil Queen and Jack",
+            date_posted=date.today(),
+            user=users[1],
+            itinerary=itineraries[0]
         ),
-        Country(
-            name="Singapore"
+        Review(
+            rating="1",
+            comment="The quick jogger zips past lazy walkers",
+            date_posted=date.today(),
+            user=users[1],
+            itinerary=itineraries[1]
         ),
-        Country(
-            name="China"
-        ),
-        Country(
-            name="United States of America"
-        ),
+        Review(
+            rating="2",
+            comment="Five dozen quirky elves quickly jump between hedges",
+            date_posted=date.today(),
+            user=users[1],
+            itinerary=itineraries[2]
+        )
     ]
-    db.session.add_all(countries)
+    db.session.add_all(reviews)
+
 
     # commit tables into database
     db.session.commit()
