@@ -17,15 +17,17 @@ class Itinerary(db.Model):
     
     country = db.relationship("Country", back_populates="itineraries")
     user = db.relationship("User", back_populates="itineraries")
+    reviews = db.relationship("Review", back_populates="itinerary")
 
 
 # creates a schema for user object
 class ItinerarySchema(ma.Schema):
     user = fields.Nested("UserSchema", only=["username"])
     country = fields.Nested("CountrySchema", only=["name"])
+    reviews = fields.List(fields.Nested('ReviewSchema', exclude=['itinerary']))
 
     class Meta:
-        fields = ("id", "title", "content", "date_posted", "duration", "post_type", "country", "user",)
+        fields = ("id", "title", "content", "date_posted", "duration", "post_type", "country", "user", "reviews")
         ordered = True
 
 itinerary_schema = ItinerarySchema()
