@@ -121,29 +121,29 @@ def seed_tables():
     # seed data for reviews
     reviews = [
         Review(
-            rating="5",
-            comment="The quick brown fox jumps over the lazy dog",
+            rating=5,
+            content="The quick brown fox jumps over the lazy dog",
             date_posted=date.today(),
             user=users[0],
             itinerary=itineraries[0]
         ),
         Review(
-            rating="4",
-            comment="Grumpy wizards make toxic brew for the evil Queen and Jack",
+            rating=4,
+            content="Grumpy wizards make toxic brew for the evil Queen and Jack",
             date_posted=date.today(),
             user=users[1],
             itinerary=itineraries[0]
         ),
         Review(
-            rating="1",
-            comment="The quick jogger zips past lazy walkers",
+            rating=1,
+            content="The quick jogger zips past lazy walkers",
             date_posted=date.today(),
             user=users[1],
             itinerary=itineraries[1]
         ),
         Review(
-            rating="2",
-            comment="Five dozen quirky elves quickly jump between hedges",
+            rating=2,
+            content="Five dozen quirky elves quickly jump between hedges",
             date_posted=date.today(),
             user=users[1],
             itinerary=itineraries[2]

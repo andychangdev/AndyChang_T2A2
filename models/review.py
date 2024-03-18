@@ -8,8 +8,8 @@ class Review(db.Model):
     # define name and columns of the table
     __tablename__ = "reviews"
     id = db.Column(db.Integer, primary_key=True)
-    rating = db.Column(db.String)
-    comment = db.Column(db.Text)
+    rating = db.Column(db.Integer)
+    content = db.Column(db.Text)
     date_posted = db.Column(db.Date)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     itinerary_id = db.Column(db.Integer, db.ForeignKey("itineraries.id"), nullable=False)
@@ -28,7 +28,7 @@ class ReviewSchema(ma.Schema):
 
     # define fields to be serialized
     class Meta:
-        fields = ("id", "rating", "comment", "date_posted", "user", "itinerary")
+        fields = ("id", "rating", "content", "date_posted", "user", "itinerary")
 
 review_schema = ReviewSchema()
-reviews_schema = ReviewSchema(many=True)
+reviews_schema = ReviewSchema(many=True, exclude=["itinerary"])
