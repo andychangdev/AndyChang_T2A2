@@ -13,7 +13,7 @@ class Itinerary(db.Model):
     date_posted = db.Column(db.Date)
     duration = db.Column(db.String(10))
     post_type = db.Column(db.String(10))
-    destination_id = db.Column(db.Integer, db.ForeignKey("destinations.id"), nullable=False)
+    destination_name = db.Column(db.String, db.ForeignKey("destinations.name"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     
     # establish relationship with other tables

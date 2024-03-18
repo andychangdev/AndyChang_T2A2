@@ -5,6 +5,7 @@ from init import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models.itinerary import Itinerary, itineraries_schema, itinerary_schema
+from models.destination import Destination
 from controllers.review_controller import reviews_bp
 
 
@@ -24,7 +25,7 @@ def get_all_itineraries():
 # retrieve a specific itinerary
 @itineraries_bp.route("/<int:itinerary_id>")
 def get_one_itinerary(itinerary_id):
-    # query itinerary table where itinerary_id matches the provided itinerary_id
+    # query itinerary table and get the itinerary that contains the provided itinerary_id
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
     if itinerary:
@@ -39,12 +40,12 @@ def get_one_itinerary(itinerary_id):
 def create_itinerary():
     # retrieve data from the request body
     data = request.get_json()
-
-    # query destination table to get the destination_id that matches the provided destination_name
-    destination_name = data.get("destination")
-    selected_destination = Destination.query.filter_by(name=destination_name).first()
-    if not selected_destination:
-        return {"Error": "Destination not found"}, 400
+    destination_name = data["destination"]["name"]
+    # retrieve data of destination
+    provided_destination = db.session.query(Destination).filter_by(name=destination_name).first()
+    # If the destination does not exist
+    if not provided_destination:
+        return {"error": f"Destination '{destination_name}' not found"}, 404
 
     # create itinerary instance
     itinerary = Itinerary(
@@ -53,7 +54,7 @@ def create_itinerary():
         date_posted=date.today(),
         duration=data.get("duration"),
         post_type=data.get("post_type"),
-        destination=selected_destination,
+        destination=provided_destination,
         user_id=get_jwt_identity(),
     )
     # add and commit new itinerary to database
@@ -67,30 +68,30 @@ def create_itinerary():
 # retrieve itineraries by destination_name
 @itineraries_bp.route("/<string:destination_name>")
 def get_itineraries_by_destination_name(destination_name):
-    # query destination table to get the destination_id that matches the provided destination_name
-    destination = db.session.query(Destination).filter_by(name=destination_name).first()
-    # if the destination exists, use retrieved destination_id to filter itineraries
-    if destination:
-        selected_destination_id = destination.id
-        stmt = db.select(Itinerary).filter_by(destination_id=selected_destination_id)
+    try:
+        stmt = db.select(Itinerary).filter_by(destination_name=destination_name)
         itineraries = db.session.scalars(stmt)
         return itineraries_schema.dump(itineraries)
-    else:
+    except:
         return {"Error": "Destination not found"}, 404
     
 
-# retrieve itineraries by destination_tyoe
+# retrieve itineraries by destination_type
 @itineraries_bp.route("/type/<string:destination_type>")
 def get_itineraries_by_destination_type(destination_type):
-    # query destination table to get the destination_id that matches the provided destination_name
-    destination = db.session.query(Destination).filter_by(type=destination_type).first()
-    # if the destination exists, use retrieved destination_id to filter itineraries
-    if destination:
-        selected_destination_id = destination.id
-        stmt = db.select(Itinerary).filter_by(destination_id=selected_destination_id)
-        itineraries = db.session.scalars(stmt)
-        return itineraries_schema.dump(itineraries)
-    else:
+    try:
+        destination_type = destination_type.capitalize()
+        # query destination table and get the destinations that contains the provided destination_type
+        destinations = db.session.query(Destination).filter_by(type=destination_type).first()
+        # if destinations with that type exists, retrieve itineraries that contain the destination
+        if destinations:
+            selected_destination_name = destinations.name
+            stmt = db.select(Itinerary).filter_by(destination_name=selected_destination_name)
+            itineraries = db.session.scalars(stmt)
+            return itineraries_schema.dump(itineraries)
+        else:
+            return {"Error": "No Destination type found"}, 404
+    except:
         return {"Error": "Destination type not found"}, 404
     
 
@@ -99,12 +100,14 @@ def get_itineraries_by_destination_type(destination_type):
 def update_itinerary(itinerary_id):
     # retrieve data from the request body
     data = request.get_json()
-    # query destination table to get the destination_id that matches the provided destination_name
-    destination_name = data.get("destination")
-    selected_destination = Destination.query.filter_by(name=destination_name).first()
-    if not selected_destination:
-        return {"Error": "Destination not found"}, 400
+    destination_name = data["destination"]["name"]
+    # retrieve data of destination
+    provided_destination = db.session.query(Destination).filter_by(name=destination_name).first()
+    # If the destination does not exist
+    if not provided_destination:
+        return {"error": f"Destination '{destination_name}' not found"}, 404
     
+    # query itinerary table and get the itinerary that contains the provided itinerary_id
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
     # if itinerary exists, update fields
@@ -113,7 +116,7 @@ def update_itinerary(itinerary_id):
         itinerary.content = data.get("content") or itinerary.content
         itinerary.duration = data.get("duration") or itinerary.duration
         itinerary.post_type = data.get("post_type") or itinerary.post_type
-        itinerary.destination = selected_destination or itinerary.destination
+        itinerary.destination = provided_destination or itinerary.destination
 
         db.session.commit()
         return itinerary_schema.dump(itinerary)
@@ -125,7 +128,7 @@ def update_itinerary(itinerary_id):
 @itineraries_bp.route("/<int:itinerary_id>", methods=["DELETE"])
 @jwt_required()
 def delete_card(itinerary_id):
-    # query itinerary table where itinerary_id matches the provided itinerary_id
+    # query itinerary table and get the itinerary that contains the provided itinerary_id
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
     if itinerary:
@@ -138,4 +141,3 @@ def delete_card(itinerary_id):
             return {"Error": f'Unauthorized to delete itinerary ID {itinerary_id}'}
     else:
         return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
-
