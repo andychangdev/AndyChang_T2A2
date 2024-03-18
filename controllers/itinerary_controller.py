@@ -5,10 +5,11 @@ from init import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models.itinerary import Itinerary, itineraries_schema, itinerary_schema
-from models.destination import Destination
+from controllers.review_controller import reviews_bp
 
 
 itineraries_bp = Blueprint("itineraries", __name__, url_prefix="/itineraries")
+itineraries_bp.register_blueprint(reviews_bp)
 
 
 # retrieve all itineraries
@@ -77,6 +78,7 @@ def get_itineraries_by_destination_name(destination_name):
     else:
         return {"Error": "Destination not found"}, 404
     
+
 # retrieve itineraries by destination_tyoe
 @itineraries_bp.route("/type/<string:destination_type>")
 def get_itineraries_by_destination_type(destination_type):
@@ -107,28 +109,33 @@ def update_itinerary(itinerary_id):
     itinerary = db.session.scalar(stmt)
     # if itinerary exists, update fields
     if itinerary:
-        itinerary.title = data.get('title') or itinerary.title
-        itinerary.content = data.get('content') or itinerary.content
-        itinerary.duration = data.get('duration') or itinerary.duration
-        itinerary.post_type = data.get('post_type') or itinerary.post_type
+        itinerary.title = data.get("title") or itinerary.title
+        itinerary.content = data.get("content") or itinerary.content
+        itinerary.duration = data.get("duration") or itinerary.duration
+        itinerary.post_type = data.get("post_type") or itinerary.post_type
         itinerary.destination = selected_destination or itinerary.destination
 
         db.session.commit()
         return itinerary_schema.dump(itinerary)
     else:
-        return {'Error': f"Itinerary ID {itinerary_id} not found"}, 404
+        return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
     
 
 # delete an existing itinerary
-@itineraries_bp.route('/<int:itinerary_id>', methods=['DELETE'])
+@itineraries_bp.route("/<int:itinerary_id>", methods=["DELETE"])
+@jwt_required()
 def delete_card(itinerary_id):
     # query itinerary table where itinerary_id matches the provided itinerary_id
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
     if itinerary:
-        db.session.delete(itinerary)
-        db.session.commit()
-        return {'Message': f"Itinerary titled '{itinerary.title}' deleted successfully"}
+        user_id = get_jwt_identity()
+        if int(itinerary.user.id) == int(user_id):
+            db.session.delete(itinerary)
+            db.session.commit()
+            return {"Message": f'Itinerary ID {itinerary_id} deleted successfully'}
+        else:
+            return {"Error": f'Unauthorized to delete itinerary ID {itinerary_id}'}
     else:
         return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
 
