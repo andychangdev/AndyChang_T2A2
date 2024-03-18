@@ -17,25 +17,26 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 @auth_bp.route("/register", methods=["POST"])
 def auth_register():
     try:
+        # retrieve data from the request body and remove password
+        request_data = request.get_json()
+        password = request_data.pop("password", None)
         # retrieve data from the request body
-        data = request.get_json()
-
+        data = user_schema.load(request_data)
         # create user instance
         user = User(
             username=data.get("username"),
             email=data.get("email"),
             date_joined=date.today()
         )
-
-        # retrieve password from request body
-        password = data.get("password")
         # if password exists, then hash the password
         if password:
-            user.password = bcrypt.generate_password_hash(password).decode("utf-8")
+            hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+            user.password = hashed_password
         # add and commit the user to database
         db.session.add(user)
         db.session.commit()
         return user_schema.dump(user), 201
+    
     
     except IntegrityError as error:
         # if error is due to empty data field, return error message
@@ -53,15 +54,17 @@ def auth_register():
 # login an existing user
 @auth_bp.route("/login", methods=["POST"])
 def auth_login():
+    # retrieve data from the request body and remove password
+    request_data = request.get_json()
+    password = request_data.pop("password", None)
     # retrieve data from the request body
-    data = request.get_json()
-    
+    data = user_schema.load(request_data)
     # retrieve the user with email address
     stmt = db.select(User).filter_by(email=data.get("email"))
     user = db.session.scalar(stmt)
     # if user exists and password is correct, create jwt token and return user info along with token
     if user:
-        if bcrypt.check_password_hash(user.password, data.get("password")):
+        if bcrypt.check_password_hash(user.password, password):
             token = create_access_token(
                 identity=str(user.id), expires_delta=timedelta(days=1)
             )

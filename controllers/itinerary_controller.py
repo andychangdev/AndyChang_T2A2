@@ -39,7 +39,7 @@ def get_one_itinerary(itinerary_id):
 @jwt_required()
 def create_itinerary():
     # retrieve data from the request body
-    data = request.get_json()
+    data = itinerary_schema.load(request.get_json())
     destination_name = data["destination"]["name"]
     # retrieve data of destination
     provided_destination = db.session.query(Destination).filter_by(name=destination_name).first()
@@ -69,6 +69,7 @@ def create_itinerary():
 @itineraries_bp.route("/<string:destination_name>")
 def get_itineraries_by_destination_name(destination_name):
     try:
+        destination_name = destination_name.capitalize()
         stmt = db.select(Itinerary).filter_by(destination_name=destination_name)
         itineraries = db.session.scalars(stmt)
         return itineraries_schema.dump(itineraries)
@@ -99,7 +100,7 @@ def get_itineraries_by_destination_type(destination_type):
 @itineraries_bp.route("/<int:itinerary_id>", methods=["PUT", "PATCH"])
 def update_itinerary(itinerary_id):
     # retrieve data from the request body
-    data = request.get_json()
+    data = itinerary_schema.load(request.get_json())
     destination_name = data["destination"]["name"]
     # retrieve data of destination
     provided_destination = db.session.query(Destination).filter_by(name=destination_name).first()
