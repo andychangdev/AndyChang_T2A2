@@ -4,12 +4,12 @@ from init import db, ma, bcrypt, jwt
 from marshmallow.exceptions import ValidationError
 
 
+# create flask application
 def create_app():
     app = Flask(__name__)
-
     app.json.sort_keys = False
 
-    # configs
+    # configuration settings for application
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI")
     app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
 
@@ -19,6 +19,8 @@ def create_app():
     bcrypt.init_app(app)
     jwt.init_app(app)
 
+    
+    # global error handlers that catch specific error codes
     @app.errorhandler(400)
     def bad_request(error):
         return {"Error": str(error)}, 400
@@ -31,16 +33,15 @@ def create_app():
     def validation_error(error):
         return {"error": error.messages}, 400
 
-    from controllers.cli_controller import db_commands
 
+    # import and register blueprints for application
+    from controllers.cli_controller import db_commands
     app.register_blueprint(db_commands)
 
     from controllers.auth_controller import auth_bp
-
     app.register_blueprint(auth_bp)
 
     from controllers.itinerary_controller import itineraries_bp
-
     app.register_blueprint(itineraries_bp)
 
     return app
