@@ -44,4 +44,7 @@ def create_app():
     from controllers.itinerary_controller import itineraries_bp
     app.register_blueprint(itineraries_bp)
 
+    from controllers.destination_controller import destinations_bp
+    app.register_blueprint(destinations_bp)
+
     return app
