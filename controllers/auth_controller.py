@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+import functools
 
 from flask import Blueprint, request
 from init import db, bcrypt
@@ -12,6 +13,22 @@ from models.user import User, user_schema
 
 # create a blueprint
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
+
+
+def authorise_as_admin(fn):
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        user_id = get_jwt_identity()
+        stmt = db.select(User).filter_by(id=user_id)
+        user = db.session.scalar(stmt)
+        # if the user is an admin
+        if user.is_admin:
+            return fn(*args, **kwargs)
+        # else the user is not an admin
+        else:
+            # return an error
+            return {"Error": "Operation requires administrator privileges"}, 403
+    return wrapper
 
 
 # register a user
