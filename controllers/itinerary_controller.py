@@ -113,7 +113,7 @@ def update_itinerary(itinerary_id):
     # query itinerary table and get the itinerary that contains the provided itinerary_id
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
-    # if user_id matches the user_id of the itinerary
+    # if user  matches the user_id of the itinerary
     if str(itinerary.user.id) == get_jwt_identity():
     # if itinerary exists, update fields
         if itinerary:
@@ -128,19 +128,18 @@ def update_itinerary(itinerary_id):
         else:
             return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
     else:
-        return {"Error": f"Unauthorized to delete itinerary ID {itinerary_id}"}, 401
+        return {"Error": f"Unauthorized to update itinerary ID {itinerary_id}"}, 401
     
 
 # delete an existing itinerary
 @itineraries_bp.route("/<int:itinerary_id>", methods=["DELETE"])
 @jwt_required()
-def delete_card(itinerary_id):
+def delete_itinerary(itinerary_id):
     # query itinerary table and get the itinerary that contains the provided itinerary_id
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
-    # if user is admin or user_id matches the user_id of the itinerary
-    is_admin = is_user_admin()
-    if is_admin or str(itinerary.user.id) == get_jwt_identity():
+    # if user is admin or user_id matches the user_id of the itinerary, delete itinerary
+    if is_user_admin() or str(itinerary.user.id) == get_jwt_identity():
         if itinerary:
                 db.session.delete(itinerary)
                 db.session.commit()
