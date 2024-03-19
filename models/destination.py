@@ -17,12 +17,9 @@ class Destination(db.Model):
 # create schema for destination objects
 class DestinationSchema(ma.Schema):
 
-    # use existing schema for the following fields
-    itineraries = fields.List(fields.Nested("ItinerarySchema", only=["name"]))
-
     # define fields to be serialized
     class Meta:
-        fields = ("name", "type", "itineraries")     
+        fields = ("name", "type")     
 
 destination_schema = DestinationSchema()
 destinations_schema = DestinationSchema(many=True)
