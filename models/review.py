@@ -1,5 +1,6 @@
 from init import db, ma
 from marshmallow import fields
+from marshmallow.validate import Length, And, Regexp, OneOf
 
 
 # create database model for reviews
@@ -19,9 +20,19 @@ class Review(db.Model):
     itinerary = db.relationship("Itinerary", back_populates="reviews")
 
 
+
 # create schema for review objects
 class ReviewSchema(ma.Schema):
 
+    # validates rating
+    rating = fields.Integer(
+        validate=OneOf([1, 2, 3, 4, 5], error="Rating must be a number between 1 and 5"))
+    
+    # validates content
+    content = fields.String(
+        required=True,
+        validate=Regexp("^[a-zA-Z0-9 ]+$", error="Content can only contain alphanumeric characters"))
+    
     # use existing schema for the following fields
     user = fields.Nested("UserSchema", only=["username"])
     itinerary = fields.Nested("ItinerarySchema", exclude=["reviews"])

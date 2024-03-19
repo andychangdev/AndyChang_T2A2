@@ -13,7 +13,7 @@ reviews_bp = Blueprint("reviews", __name__, url_prefix="/<int:itinerary_id>/revi
 @reviews_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_review(itinerary_id):
-    data = request.get_json()
+    data = review_schema.load(request.get_json())
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
     if itinerary:
