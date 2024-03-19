@@ -16,6 +16,11 @@ destinations_bp = Blueprint("destinations", __name__, url_prefix="/destinations"
 def create_destinations():
     data = destination_schema.load(request.get_json())
     if is_user_admin():
+
+        destination_name = Destination.query.filter_by(name=data.get("name")).first()
+        if destination_name:
+            return {"Error": "Destination name already exists"}, 409
+    
         # create destination instance
         destination = Destination(
             name=data.get("name"),
