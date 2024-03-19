@@ -30,10 +30,8 @@ class ItinerarySchema(ma.Schema):
     title = fields.String(
         required=True,
         validate=And(
-            Length(
-                min=5, max=50, error="Title must be between 5 and 50 characters long"),
-            Regexp(
-                "^[a-zA-Z0-9 ]+$", error="Title can only contain alphanumeric characters"),
+            Length(min=5, max=50, error="Title must be between 5 and 50 characters long"),
+            Regexp("^[a-zA-Z0-9 ]+$", error="Title can only contain alphanumeric characters"),
         ),
     )
 
@@ -48,13 +46,13 @@ class ItinerarySchema(ma.Schema):
         try:
             number, unit = value.split() # split input_value into number and unit
             # if unit is not in days, raise a validation error
-            if unit != 'day':
+            if unit != "day":
                 raise ValidationError('Duration must be in the format "X day"')
             
             number_of_days = int(number) # convert the number to an integer
             # if the number of days is not between 1 and 30 days, raise an error
             if not 1 <= number_of_days <= 30:
-                raise ValidationError('Duration must be between 1 and 30 days.')
+                raise ValidationError("Duration must be between 1 and 30 days.")
         
         # if there's an error during split or convert, raise a validation error
         except (ValueError, IndexError): 
@@ -70,17 +68,7 @@ class ItinerarySchema(ma.Schema):
 
     # define fields to be serialized
     class Meta:
-        fields = (
-            "id",
-            "title",
-            "content",
-            "date_posted",
-            "duration",
-            "post_type",
-            "destination",
-            "user",
-            "reviews",
-        )
+        fields = ("id", "title", "content", "date_posted", "duration", "post_type", "destination", "user", "reviews",)
         ordered = True  # maintain order of the fields
 
 
