@@ -23,9 +23,6 @@ class Itinerary(db.Model):
     reviews = db.relationship("Review", back_populates="itinerary", cascade='all, delete')
 
 
-# validation for post_type
-VALID_POST_TYPES = ("Advice", "Guide") # only accepts either 'advice' or 'guide'
-
 # create schema for itinerary objects
 class ItinerarySchema(ma.Schema):
 
@@ -36,14 +33,14 @@ class ItinerarySchema(ma.Schema):
             Length(
                 min=5, max=50, error="Title must be between 5 and 50 characters long"),
             Regexp(
-                "^[a-zA-Z0-9 ]+$", error="Title contain only have alphanumeric characters"),
+                "^[a-zA-Z0-9 ]+$", error="Title can only contain alphanumeric characters"),
         ),
     )
 
     # validates content
     content = fields.String(
         required=True,
-        validate=Regexp("^[a-zA-Z0-9 ]+$", error="Title contain only have alphanumeric characters"))
+        validate=Regexp("^[a-zA-Z0-9 ]+$", error="Content can only contain alphanumeric characters"))
 
     # validates duration
     @validates('duration')
@@ -64,7 +61,7 @@ class ItinerarySchema(ma.Schema):
             raise ValidationError('Duration must be in the format "X day" where X is an integer.')
 
     # validates post_type
-    post_type = fields.String(validate=OneOf(VALID_POST_TYPES))
+    post_type = fields.String(validate=OneOf(["Advice", "Guide"], error='Post type must be either "Advice" or "Guide"'))
 
     # use existing schemas for the following fields
     user = fields.Nested("UserSchema", only=["username"])
