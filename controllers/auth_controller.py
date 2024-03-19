@@ -5,6 +5,7 @@ from init import db, bcrypt
 from psycopg2 import errorcodes
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
 
 from models.user import User, user_schema
 
@@ -75,3 +76,10 @@ def auth_login():
     # else user does not exists, return error message
     else:
         return {"Error": "Email address not found."}, 404
+
+# create function that checks if user is admin    
+def is_user_admin():
+    user_id = get_jwt_identity()
+    stmt = db.select(User).filter_by(id=user_id)
+    user = db.session.scalar(stmt)
+    return user.is_admin

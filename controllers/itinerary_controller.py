@@ -6,6 +6,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models.itinerary import Itinerary, itineraries_schema, itinerary_schema
 from models.destination import Destination
+from controllers.auth_controller import is_user_admin
 from controllers.review_controller import reviews_bp
 
 
@@ -98,6 +99,7 @@ def get_itineraries_by_destination_type(destination_type):
 
 # update an existing itinerary
 @itineraries_bp.route("/<int:itinerary_id>", methods=["PUT", "PATCH"])
+@jwt_required()
 def update_itinerary(itinerary_id):
     # retrieve data from the request body
     data = itinerary_schema.load(request.get_json())
@@ -111,18 +113,22 @@ def update_itinerary(itinerary_id):
     # query itinerary table and get the itinerary that contains the provided itinerary_id
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
+    # if user_id matches the user_id of the itinerary
+    if str(itinerary.user.id) == get_jwt_identity():
     # if itinerary exists, update fields
-    if itinerary:
-        itinerary.title = data.get("title") or itinerary.title
-        itinerary.content = data.get("content") or itinerary.content
-        itinerary.duration = data.get("duration") or itinerary.duration
-        itinerary.post_type = data.get("post_type") or itinerary.post_type
-        itinerary.destination = provided_destination or itinerary.destination
+        if itinerary:
+            itinerary.title = data.get("title") or itinerary.title
+            itinerary.content = data.get("content") or itinerary.content
+            itinerary.duration = data.get("duration") or itinerary.duration
+            itinerary.post_type = data.get("post_type") or itinerary.post_type
+            itinerary.destination = provided_destination or itinerary.destination
 
-        db.session.commit()
-        return itinerary_schema.dump(itinerary)
+            db.session.commit()
+            return itinerary_schema.dump(itinerary)
+        else:
+            return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
     else:
-        return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
+        return {"Error": f"Unauthorized to delete itinerary ID {itinerary_id}"}, 401
     
 
 # delete an existing itinerary
@@ -132,13 +138,14 @@ def delete_card(itinerary_id):
     # query itinerary table and get the itinerary that contains the provided itinerary_id
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
-    if itinerary:
-        user_id = get_jwt_identity()
-        if int(itinerary.user.id) == int(user_id):
-            db.session.delete(itinerary)
-            db.session.commit()
-            return {"Message": f'Itinerary ID {itinerary_id} deleted successfully'}
+    # if user is admin or user_id matches the user_id of the itinerary
+    is_admin = is_user_admin()
+    if is_admin or str(itinerary.user.id) == get_jwt_identity():
+        if itinerary:
+                db.session.delete(itinerary)
+                db.session.commit()
+                return {"Message": f"Itinerary ID {itinerary_id} deleted successfully"}
         else:
-            return {"Error": f'Unauthorized to delete itinerary ID {itinerary_id}'}
-    else:
-        return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
+            return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
+    else: 
+        return {"Error": f"Unauthorized to delete itinerary ID {itinerary_id}"}, 401
