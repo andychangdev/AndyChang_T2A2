@@ -28,11 +28,12 @@ class UserSchema(ma.Schema):
             Regexp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", error="Email addresses can only contain letters, numbers, periods, hyphens, and underscores")
         ),
     )
-    itineraries = fields.List(fields.Nested("ItinerarySchema", exclude=["user"]))
-    reviews = fields.List(fields.Nested("ReviewSchema", exclude=["user"]))
+    itineraries = fields.List(fields.Nested("ItinerarySchema", exclude=["user", "reviews"]))
+    reviews = fields.List(fields.Nested("ReviewSchema", exclude=["user", "itinerary"]))
 
     class Meta:
         fields = ("id", "username", "email", "date_joined", "is_admin", "itineraries", "reviews")
 
 
 user_schema = UserSchema()
+users_schema = UserSchema(many=True, exclude=["itineraries", "reviews"])
