@@ -20,8 +20,8 @@ def create_review(itinerary_id):
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
     # if retrieved itinerary does not belong to user, create review
-    if str(itinerary.user.id) != get_jwt_identity():
-        if itinerary:
+    if itinerary:
+        if str(itinerary.user.id) != get_jwt_identity():
             review = Review(
             rating = data.get("rating"),
             content = data.get("content"),
@@ -33,9 +33,9 @@ def create_review(itinerary_id):
             db.session.commit()
             return review_schema.dump(review), 201
         else:
-            return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
+            return {"Error": "Creator of itinerary not permitted to create review"}, 403
     else:
-        return {"Error": "Creator of itinerary not permitted to create review"}, 403
+        return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
     
 
 # retrieve reviews in an intinerary by rating

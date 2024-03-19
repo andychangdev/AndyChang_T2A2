@@ -10,6 +10,7 @@ from controllers.auth_controller import is_user_admin
 from controllers.review_controller import reviews_bp
 
 
+# create a blueprint for itinerary controller
 itineraries_bp = Blueprint("itineraries", __name__, url_prefix="/itineraries")
 itineraries_bp.register_blueprint(reviews_bp)
 
@@ -69,36 +70,35 @@ def create_itinerary():
 # retrieve itineraries by destination_name
 @itineraries_bp.route("/<string:destination_name>")
 def get_itineraries_by_destination_name(destination_name):
-    try:
         destination_name = destination_name.capitalize()
+        # query itinerary table and get the itineraries that contains the provided destination_name
         stmt = db.select(Itinerary).filter_by(destination_name=destination_name)
-        itineraries = db.session.scalars(stmt)
-        return itineraries_schema.dump(itineraries)
-    except:
-        return {"Error": "Destination not found"}, 404
+        itineraries = db.session.scalars(stmt).all()
+        # if itineraries with that destination_name exists, retrieve itineraries
+        if itineraries:
+            return itineraries_schema.dump(itineraries)
+        else: 
+            return {"Error": "Destination not found"}, 404
     
 
 # retrieve itineraries by destination_type
 @itineraries_bp.route("/type/<string:destination_type>")
 def get_itineraries_by_destination_type(destination_type):
-    try:
-        destination_type = destination_type.capitalize()
-        # query destination table and get the destinations that contains the provided destination_type
-        destinations = db.session.query(Destination).filter_by(type=destination_type).first()
-        # if destinations with that type exists, retrieve itineraries that contain the destination
-        if destinations:
-            selected_destination_name = destinations.name
-            stmt = db.select(Itinerary).filter_by(destination_name=selected_destination_name)
-            itineraries = db.session.scalars(stmt)
-            return itineraries_schema.dump(itineraries)
-        else:
-            return {"Error": "No Destination type found"}, 404
-    except:
+    destination_type = destination_type.capitalize()
+    # query destination table and get the destinations that contains the provided destination_type
+    destinations = db.session.query(Destination).filter_by(type=destination_type).first()
+    # if destinations with that type exists, retrieve itineraries that contain the destination
+    if destinations:
+        selected_destination_name = destinations.name
+        stmt = db.select(Itinerary).filter_by(destination_name=selected_destination_name)
+        itineraries = db.session.scalars(stmt)
+        return itineraries_schema.dump(itineraries)
+    else:
         return {"Error": "Destination type not found"}, 404
     
 
 # update an existing itinerary
-@itineraries_bp.route("/<int:itinerary_id>", methods=["PUT", "PATCH"])
+@itineraries_bp.route("/<int:itinerary_id>", methods=["PATCH"])
 @jwt_required()
 def update_itinerary(itinerary_id):
     # retrieve data from the request body
@@ -113,10 +113,9 @@ def update_itinerary(itinerary_id):
     # query itinerary table and get the itinerary that contains the provided itinerary_id
     stmt = db.select(Itinerary).filter_by(id=itinerary_id)
     itinerary = db.session.scalar(stmt)
-    # if user  matches the user_id of the itinerary
-    if str(itinerary.user.id) == get_jwt_identity():
-    # if itinerary exists, update fields
-        if itinerary:
+    # if itinerary exists and  user matches the user_id of the itinerary, update fields
+    if itinerary:
+        if str(itinerary.user.id) == get_jwt_identity():
             itinerary.title = data.get("title") or itinerary.title
             itinerary.content = data.get("content") or itinerary.content
             itinerary.duration = data.get("duration") or itinerary.duration
@@ -126,9 +125,9 @@ def update_itinerary(itinerary_id):
             db.session.commit()
             return itinerary_schema.dump(itinerary)
         else:
-            return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
+            return {"Error": f"Unauthorized to update itinerary ID {itinerary_id}"}, 401
     else:
-        return {"Error": f"Unauthorized to update itinerary ID {itinerary_id}"}, 401
+        return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
     
 
 # delete an existing itinerary
