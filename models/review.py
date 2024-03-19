@@ -1,6 +1,6 @@
 from init import db, ma
 from marshmallow import fields
-from marshmallow.validate import Length, And, Regexp, OneOf
+from marshmallow.validate import Regexp, OneOf
 
 
 # create database model for reviews
@@ -18,7 +18,6 @@ class Review(db.Model):
     # establish relationship with other table
     user = db.relationship("User", back_populates="reviews")
     itinerary = db.relationship("Itinerary", back_populates="reviews")
-
 
 
 # create schema for review objects
@@ -40,6 +39,7 @@ class ReviewSchema(ma.Schema):
     # define fields to be serialized
     class Meta:
         fields = ("id", "rating", "content", "date_posted", "user", "itinerary")
+
 
 review_schema = ReviewSchema()
 reviews_schema = ReviewSchema(many=True, exclude=["itinerary"])
