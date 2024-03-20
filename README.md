@@ -29,7 +29,7 @@ Unfortunately, this exhausting process is exacerbated by the amount of travel re
 
 To counteract these sort of biased and misleading reviews, it is important that the travel communnity play a role in maintaining the integrity of travel information. Hence, this API seeks to enable it by allowing real travelers to share their past itineraies and provide honest and authentic reviews and ratings. New travelers can benefit greatly from this shared knowledge, as this allows them to fact-check and not just rely only on travel guides written by professional writers whose opinions may or may not be influenced by advertising dollars.
 
-Another common problem travelers face when planning for trips to unfamiliar places is dealing with anxiety and uncertainty. Getting confirmation from seasoned travellers, or perhaps even locals, can significantly ease their worries and make the journey less stressful. That is why this API enables users to share their itinaries and recieve feedback from other travellers. This sort of interaction can help build confidence and reduce anxiety.
+Another common problem travelers face when planning for trips to unfamiliar places is dealing with anxiety and uncertainty. Getting confirmation from experienced travellers, or perhaps even locals, can significantly ease their worries and make the journey less stressful. That is why this API enables users to share their itinaries and recieve feedback from other travellers. This sort of interaction can help build confidence and reduce anxiety.
 
 ## R3 - Choice of Database System
 
@@ -130,3 +130,10 @@ In this project, I have opted to use a Kanban workflow as my method of planning 
 ![screenshot](./docs/checklists/14-03-2024_c1.png)
 ![screenshot](./docs/checklists/14-03-2024_c2.png)
 ![screenshot](./docs/checklists/14-03-2024_c3.png)
+![screenshot](./docs/checklists/14-03-2024_c4.png)
+
+**19-03-2024:** Finished coding API. Need to test and document endpoints. 
+
+![screenshot](./docs/kanban_board/19-03-2024.jpeg)
+
+
