@@ -6,12 +6,16 @@ from marshmallow.validate import Regexp, OneOf
 # create database model for reviews
 class Review(db.Model):
 
-    # define name and columns of the table
+    # define name of the table
     __tablename__ = "reviews"
+
+    # define columns of the table
     id = db.Column(db.Integer, primary_key=True)
     rating = db.Column(db.Integer)
     content = db.Column(db.Text)
     date_posted = db.Column(db.Date)
+    
+    # define foreign keys of the table
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     itinerary_id = db.Column(db.Integer, db.ForeignKey("itineraries.id"), nullable=False)
 
@@ -36,10 +40,11 @@ class ReviewSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=["username"])
     itinerary = fields.Nested("ItinerarySchema", exclude=["reviews"])
 
-    # define fields to be serialized
+    # define fields to be serialised and deserialised
     class Meta:
         fields = ("id", "rating", "content", "date_posted", "user", "itinerary")
 
 
+# create a schema instance for serializing and deserializing a single and multiple review
 review_schema = ReviewSchema()
 reviews_schema = ReviewSchema(many=True, exclude=["itinerary"])

@@ -6,8 +6,10 @@ from marshmallow.validate import Length, And, Regexp, OneOf
 # create database model for destinations
 class Destination(db.Model):
 
-    # define name and columns of the table
+    # define name of the table
     __tablename__ = "destinations"
+
+    # define columns of the table
     name = db.Column(db.String, primary_key=True)
     type = db.Column(db.String, nullable=False)
 
@@ -25,13 +27,14 @@ class DestinationSchema(ma.Schema):
             Regexp("^[a-zA-Z ]+$", error="Destination name can only contain letters")
         ),
     )
+
     # validates destination type
     type = fields.String(validate=OneOf(["Country", "City"], error='Destination type must be either "Country" or "City"'))
 
-    # define fields to be serialized
+    # define fields to be serialised and deserialised
     class Meta:
         fields = ("name", "type")     
 
-
+# create a schema instance for serializing and deserializing a single and multiple destination
 destination_schema = DestinationSchema()
 destinations_schema = DestinationSchema(many=True)

@@ -6,14 +6,18 @@ from marshmallow.validate import Length, And, Regexp, OneOf
 # create database model for itineraries
 class Itinerary(db.Model):
 
-    # define name and columns of the table
+    # define name of the table
     __tablename__ = "itineraries"
+
+    # define columns of the table
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     content = db.Column(db.Text)
     date_posted = db.Column(db.Date)
     duration = db.Column(db.String(10))
     post_type = db.Column(db.String)
+
+    # define foreign keys of the table
     destination_name = db.Column(db.String, db.ForeignKey("destinations.name"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
@@ -66,11 +70,12 @@ class ItinerarySchema(ma.Schema):
     destination = fields.Nested("DestinationSchema", only=["name", "type"])
     reviews = fields.List(fields.Nested("ReviewSchema", exclude=["itinerary"]))
 
-    # define fields to be serialized
+    # define fields to be serialised and deserialised
     class Meta:
         fields = ("id", "title", "content", "date_posted", "duration", "post_type", "destination", "user", "reviews",)
         ordered = True  # maintain order of the fields
 
 
+# create a schema instance for serializing and deserializing a single and multiple itinerary
 itinerary_schema = ItinerarySchema()
 itineraries_schema = ItinerarySchema(many=True, exclude=["reviews"])

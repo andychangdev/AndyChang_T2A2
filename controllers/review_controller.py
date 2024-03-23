@@ -8,7 +8,10 @@ from models.itinerary import Itinerary
 from models.review import Review, review_schema, reviews_schema
 from controllers.auth_controller import is_user_admin
 
+
+# create a blueprint for review controller
 reviews_bp = Blueprint("reviews", __name__, url_prefix="/<int:itinerary_id>/reviews")
+
 
 # create a review
 @reviews_bp.route("/", methods=["POST"])
@@ -38,7 +41,7 @@ def create_review(itinerary_id):
         return {"Error": f"Itinerary ID {itinerary_id} not found"}, 404
     
 
-# retrieve reviews in an intinerary by rating
+# retrieve reviews in an itinerary by rating
 @reviews_bp.route("/rating/<int:review_rating>")
 def retrieve_review_by_rating(itinerary_id, review_rating):
     # retrieve reviews that matches the provided review_rating and itinerary_id
@@ -50,7 +53,7 @@ def retrieve_review_by_rating(itinerary_id, review_rating):
         return {"Error": f"No reviews with rating {review_rating} found in itinerary ID {itinerary_id}"}, 404
     
 
-# delete an exisiting review
+# delete an existing review
 @reviews_bp.route("/<int:review_id>", methods=["DELETE"])
 @jwt_required()
 def delete_review(itinerary_id, review_id):

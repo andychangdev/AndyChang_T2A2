@@ -15,6 +15,7 @@ from models.user import User, user_schema
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
+# create function that checks if user is admin
 def authorise_as_admin(fn):
     @functools.wraps(fn)
     def wrapper(*args, **kwargs):
@@ -93,6 +94,7 @@ def auth_login():
     # else user does not exists, return error message
     else:
         return {"Error": "Email address not found."}, 404
+
 
 # create function that checks if user is admin    
 def is_user_admin():
