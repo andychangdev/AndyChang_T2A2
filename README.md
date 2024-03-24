@@ -598,7 +598,7 @@ reviews_schema = ReviewSchema(many=True, exclude=["itinerary"])
 
 This model represents a destination in this application. Instances of this model are stored in a table named "destinations", and each instance contains the attributes `name` and `type`.
 
-The `db.relationship` function and `back_populate` parameter establishes a two way relationship between destination and itinerary. The foreign key's `user_id` and `itinerary_id` suggests a review can only belong to one user and in one itinerary. Similar to the model for user, with the existence of relationships but a lack of foreign keys in this model suggests a destination can have multiple itineraries.
+The `db.relationship` function and `back_populate` parameter establishes a two way relationship between destination and itinerary. Similar to the model for user, with the existence of relationships but a lack of foreign keys in this model suggests a destination can have multiple itineraries.
 
 ```Python
 class Destination(db.Model):
