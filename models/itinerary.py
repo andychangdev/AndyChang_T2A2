@@ -76,6 +76,6 @@ class ItinerarySchema(ma.Schema):
         ordered = True  # maintain order of the fields
 
 
-# create a schema instance for serializing and deserializing a single and multiple itinerary
+# create a schema instance for serialising and deserialising a single and multiple itinerary
 itinerary_schema = ItinerarySchema()
 itineraries_schema = ItinerarySchema(many=True, exclude=["reviews"])

@@ -35,6 +35,6 @@ class DestinationSchema(ma.Schema):
     class Meta:
         fields = ("name", "type")     
 
-# create a schema instance for serializing and deserializing a single and multiple destination
+# create a schema instance for serialising and deserialising a single and multiple destination
 destination_schema = DestinationSchema()
 destinations_schema = DestinationSchema(many=True)

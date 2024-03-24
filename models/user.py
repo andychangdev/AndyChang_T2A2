@@ -49,6 +49,6 @@ class UserSchema(ma.Schema):
         fields = ("id", "username", "email", "date_joined", "is_admin", "itineraries", "reviews")
 
 
-# create a schema instance for serializing and deserializing a single and multiple user
+# create a schema instance for serialising and deserialising a single and multiple user
 user_schema = UserSchema()
 users_schema = UserSchema(many=True, exclude=["itineraries", "reviews"])

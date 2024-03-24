@@ -45,6 +45,6 @@ class ReviewSchema(ma.Schema):
         fields = ("id", "rating", "content", "date_posted", "user", "itinerary")
 
 
-# create a schema instance for serializing and deserializing a single and multiple review
+# create a schema instance for serialising and deserialising a single and multiple review
 review_schema = ReviewSchema()
 reviews_schema = ReviewSchema(many=True, exclude=["itinerary"])
