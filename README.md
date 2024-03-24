@@ -417,7 +417,7 @@ ___
 
 ## R6 - Entity-Relationship Diagram
 
-![screenshot](./docs/Entity-Relationship%20Diagram.png)
+![screenshot](./docs/Final%20Entity-Relationship%20Diagram.png)
 
 ## R7 - Third Party Apps
 
