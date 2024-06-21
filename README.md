@@ -1,9 +1,6 @@
 <img src="./docs/banner.jpg" alt="banner"></img>
 
-<h1 align="center">Documentation for  API Webserver Project</h1>
-
- <h3 align="center">
-
+<h1 align="center">Documentation for API Webserver Project</h1>
 
 | No. | Section |
 | --- | ------------ |
