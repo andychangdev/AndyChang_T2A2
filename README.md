@@ -1,6 +1,11 @@
-<h2 align="center">Documentation for T2A2 - API Webserver Project</h2>
+<img src="./docs/banner.jpg" alt="banner"></img>
 
-| No. | Requirements |
+<h1 align="center">Documentation for  API Webserver Project</h1>
+
+ <h3 align="center">
+
+
+| No. | Section |
 | --- | ------------ |
 | R1 | <a href="#r1---identification-of-the-problem">Identification of the Problem</a> |
 | R2 | <a href="#r2---significance-of-the-problem">Significance of the Problem</a> |
